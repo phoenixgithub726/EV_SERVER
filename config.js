@@ -8,9 +8,9 @@ const CONSTANT = {
 };
 exports.CONSTANT = CONSTANT;
 exports.CONFIG = {
-    VERSION: '0.4.2',
+    VERSION: '0.0.1',
     HOST: '127.0.0.1',
-    PORT: 7777,
+    PORT: 8888,
     PRINT: CONSTANT.PRINT_ALL,
     STRIPE: {
         // KEY: 'sk_test_TRbIF0YhBBlz7VLFxq2XL2ow'
