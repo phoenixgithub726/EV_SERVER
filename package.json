@@ -1,0 +1,27 @@
+{
+  "requires": true,
+  "lockfileVersion": 1,
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "@types/node": {
+      "integrity": "sha512-Jg1F+bmxcpENHP23sVKkNuU3uaxPnsBMW0cLjleiikFKomJQbsn0Cqk2yDvQArqzZN6ABfBkZ0To7pQ8sLdWDg==",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-13.1.6.tgz",
+      "version": "13.1.6"
+    },
+    "async-limiter": {
+      "integrity": "sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==",
+      "resolved": "https://registry.npmjs.org/async-limiter/-/async-limiter-1.0.1.tgz",
+      "version": "1.0.1"
+    },
+    "nodemailer": "^6.4.10",
+    "qs": {
+      "integrity": "sha512-Cxm7/SS/y/Z3MHWSxXb8lIFqgqBowP5JMlTUFyJN88y0SGQhVmZnqFK/PeuMX9LzUyWsqqhNxIyg0jlzq946yA==",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-6.9.1.tgz",
+      "version": "6.9.1"
+    },
+    "stripe": "^8.77.0",
+    "ws": "^7.3.1"
+  }
+}
