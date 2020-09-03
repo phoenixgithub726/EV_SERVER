@@ -25,8 +25,10 @@ module.exports = async function (socket, message) {
   try {
     // check credit balance of Customer.
     const current = await Stripe.getCustomerByEmail(
-      socket.SESSION_VARS["email"]
+      // socket.SESSION_VARS["email"]
+      message.data.email
     );
+    console.log("current email after validate", current)
     const currentCredits = parseInt(current.metadata["Credit Balance"]);
     if (currentCredits < validationCost) {
       Utils.socket.sendError(
