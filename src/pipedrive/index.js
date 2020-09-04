@@ -44,14 +44,21 @@ class PipeDrive {
       const data = {};
 
       // zerobounce return invalid add "invalid" to email address.
+      let mail_value ='';
+      let value = mail.value;
+      if (value.indexOf("(")>0)
+        mail_value = value.substr(0, value.indexOf("("))
+      else 
+        mail_value = value
+      console.log("mail_value dat",mail_value)
       if(status == 'invalid')
-        email["value"] = mail.value + "(" + status + ")";
+        email["value"] = mail_value + "(" + status + ")";
       else
-        email["value"] = mail.value;
+        email["value"] = mail_value;
       email["label"] = mail.label;
       email['color'] = 'red';
 
-      console.log("email data", email);
+     
       console.log("json request:", [email]);
       const headers = [
         ["Content-Type", "application/json"],

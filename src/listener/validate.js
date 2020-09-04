@@ -38,7 +38,7 @@ module.exports = async function (socket, message) {
       return;
     }
 
-    console.log("csv data", message.data.csv);
+    console.log("message  data", message.data);
     fs.writeFile("client-server.txt", message.data.csv, (err) => {
       if (err) console.log(err);
       console.log("Successfully Written to File.");
@@ -148,21 +148,32 @@ function complete(socket, message, fileId, scanDate) {
       Utils.socket.sendData(socket, "file", f);
       Utils.socket.sendData(socket, "update", { state: "finished" });
 
-      const token = socket.SESSION_VARS["api_token"];
-      // const token = 'cc638af3ea2783059aae7e32b5b80e34c1f0d1f4'
+      // const token = socket.SESSION_VARS["api_token"];
+      const token = 'cc638af3ea2783059aae7e32b5b80e34c1f0d1f4'
       const parsed = Utils.csv.parse(f);
+      console.log("PARSED csv FROM ZB", parsed)
       const fields = {};
       const email_status = {};
       for (let userId in message.data.idToEmail) {
         let finalText = "";
         for (const email of message.data.idToEmail[userId]) {
-          finalText += `${scanDate} - ${email} - ${parsed[email].Status}`;
-          if (parsed[email]["Sub Status"]) {
-            finalText += ` (${parsed[email]["Sub Status"]})`;
+          // if (email.indexOf("(") > 0)
+          //   email.substr(0, email.indexOf("(")
+          let mail_value = ''
+          if(email.indexOf('(')>0)
+             mail_value = email.substr(0, email.indexOf('('))
+          else
+             mail_value = email;
+          console.log("parsed status email ", mail_value)
+          finalText += `${scanDate} - ${mail_value} - ${parsed[mail_value].Status}`;
+          if (parsed[mail_value]["Sub Status"]) {
+            finalText += ` (${parsed[mail_value]["Sub Status"]})`;
           }
           finalText += "\n";
           fields[userId] = finalText;
-          email_status[userId] = parsed[email].Status;
+          // email_status[userId] = parsed[email].Status;
+          email_status[userId] = parsed[mail_value].Status;
+
 
           // console.log("fields", fields)
         }
@@ -183,27 +194,27 @@ function complete(socket, message, fileId, scanDate) {
           let person_by_id = {};
 
           // add invalid to email address.
-          // try {
-          //   await PipeDrive.getPersonById(personId, token).then((r) => {
-          //     console.log("getpersonbyid-------r", r);
-          //     person_by_id = r;
-          //   });
-          //   let old_email = person_by_id["email"][0];
-          //   console.log("old_email", old_email);
-          //   personId &&
-          //     PipeDrive.updateEmail(
-          //       personId,
-          //       token,
-          //       old_email,
-          //       email_status[personId]
-          //     ).then((r) => {
-          //       if (!--requested && ids.length > 0) {
-          //         rateLimitedChanger(limit);
-          //       }
-          //     });
-          // } catch (error) {
-          //   console.log("error", error);
-          // }
+          try {
+            await PipeDrive.getPersonById(personId, token).then((r) => {
+              console.log("getpersonbyid-------r", r);
+              person_by_id = r;
+            });
+            let old_email = person_by_id["email"][0];
+            console.log("old_email", old_email);
+            personId &&
+              PipeDrive.updateEmail(
+                personId,
+                token,
+                old_email,
+                email_status[personId]
+              ).then((r) => {
+                if (!--requested && ids.length > 0) {
+                  rateLimitedChanger(limit);
+                }
+              });
+          } catch (error) {
+            console.log("error", error);
+          }
         }
       }
 

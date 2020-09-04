@@ -18,7 +18,7 @@ module.exports = async function (socket, message) {
         if (paymentIntent && paymentIntent.status == 'succeeded') {
             try {
                 let customer = await Stripe.getCustomerByEmail(email);
-                
+                if(customer){
                 console.log("customer by email", customer)
                 await Stripe.updateCustomer(customer.id, {
                     ...customer.metadata,
@@ -31,6 +31,10 @@ module.exports = async function (socket, message) {
                 console.log("custoupdatemer-:", parseInt(customer.metadata['Credit Balance']))
                 Utils.socket.sendData(socket, 'update', {state: "payment", credits: customer.metadata['Credit Balance'], history: customer.metadata });
                 // Utils.socket.sendData(socket, 'update', { credits: customer.balance, history: customer.metadata });
+                }
+                else{
+                    Utils.socket.sendError(socket, 'No Cumstomer ');
+                }
             } catch (e1) {
                 Utils.socket.sendError(socket, e1);
             }
