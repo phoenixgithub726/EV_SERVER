@@ -15,7 +15,7 @@ exports.CONFIG = {
     STRIPE: {
         // KEY: 'sk_test_TRbIF0YhBBlz7VLFxq2XL2ow'
         KEY: 'sk_test_51GsJaTENKR3DelSmqzTVwXFQNnL6PZBFwKqdENmubmXdTOPsYbcHxanm0xNO2GrFlbkmPKG02fpupFFdtRgCe4ZD00PFUKAGts'
-        // KEY: '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'
+        // KEY: 'sk_test_TRbIF0YhBBlz7VLFxq2XL2ow'
 
     },
     ZEROBOUNCE: {

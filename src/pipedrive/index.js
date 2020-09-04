@@ -6,6 +6,7 @@ const URL = {
   PERSON_FIELDS: "https://api.pipedrive.com/v1/personFields?api_token=",
   PERSONS: "https://api.pipedrive.com/api/v1/persons/",
   ME: "https://api.pipedrive.com/v1/users/me?api_token=",
+  USER: "https://api.pipedrive.com/v1/users/",
 };
 
 /**
@@ -19,6 +20,10 @@ class PipeDrive {
    */
   static getMyInfo(token) {
     return request(URL.ME + token);
+  }
+  static getUserById(token, id) {
+    // return request(URL.ME + token);
+    return request(URL.USER + id + "?api_token=" + token)
   }
   /**
    *

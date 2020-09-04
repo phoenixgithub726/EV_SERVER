@@ -18,6 +18,7 @@ module.exports = async function (socket, message) {
         if (paymentIntent && paymentIntent.status == 'succeeded') {
             try {
                 let customer = await Stripe.getCustomerByEmail(email);
+
                 if(customer){
                 console.log("customer by email", customer)
                 await Stripe.updateCustomer(customer.id, {
@@ -25,7 +26,7 @@ module.exports = async function (socket, message) {
                     'Credit Balance':parseInt(customer.metadata['Credit Balance'])  + parseInt( val)
                     // 'Credit Balance': 0  
                 });
-                
+                console.log("UPDATE CUSTOMER AFTER PAYMENT",customer )
                 customer = await Stripe.getCustomerByEmail(email);
                 console.log("updateedcustomer:", customer)
                 console.log("custoupdatemer-:", parseInt(customer.metadata['Credit Balance']))

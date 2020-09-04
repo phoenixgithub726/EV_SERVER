@@ -28,9 +28,12 @@ const prices = {
 module.exports = async function (socket, message) {
     // api_token session variables for user.
     socket.SESSION_VARS['api_token'] = message.data.token;
-
+    socket.SESSION_VARS['user_id'] = message.data.id;
     if (socket.SESSION_VARS['api_token']) {
-        PipeDrive.getMyInfo(socket.SESSION_VARS['api_token'])
+        // getUserById
+        PipeDrive.getUserById(socket.SESSION_VARS['api_token'], socket.SESSION_VARS['user_id'])
+
+        // PipeDrive.getMyInfo(socket.SESSION_VARS['api_token'])
             .then(async (me) => {
                 // api_token session variables for user.
                 socket.SESSION_VARS['email'] = me.data.email;
