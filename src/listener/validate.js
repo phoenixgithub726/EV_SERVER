@@ -99,7 +99,7 @@ module.exports = async function (socket, message) {
  */
 function validateEmails(socket, fileId) {
   return new Promise(async (resolve, reject) => {
-    let timeout = 100; // set timeout as 100 times
+    let timeout = 10000; // set timeout as 100 times
     while (timeout > 0) {
       timeout--;
       try {
@@ -110,13 +110,14 @@ function validateEmails(socket, fileId) {
           );
           return;
         }
-
+        console.log("validating file info", fileInfo)
         if (fileInfo.file_status === "Complete") {
           resolve(fileInfo);
           return;
         }
 
         // update client's status
+        console.log("validating file info", fileInfo)
         Utils.socket.sendData(socket, "update", {
           state: "validating",
           validationMessage: `Validating emails in ${100 - timeout}%`,
