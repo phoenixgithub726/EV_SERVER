@@ -119,8 +119,11 @@ function validateEmails(socket, fileId) {
         // update client's status
         console.log("validating file info", fileInfo)
         Utils.socket.sendData(socket, "update", {
-          state: "validating",
-          validationMessage: `Validating emails in ${100 - timeout}%`,
+          state: "validating", validateProcessing :{
+            status: fileInfo.file_status,
+            percent : fileInfo.complete_percentage
+          }
+          
         });
         await Utils.time.sleep(1000);
       } catch (e) {
@@ -152,7 +155,7 @@ function complete(socket, message, fileId, scanDate) {
       // const token = socket.SESSION_VARS["api_token"];
       const token = 'cc638af3ea2783059aae7e32b5b80e34c1f0d1f4'
       const parsed = Utils.csv.parse(f);
-      console.log("PARSED csv FROM ZB", parsed)
+      // console.log("PARSED csv FROM ZB", parsed)
       const fields = {};
       const email_status = {};
       for (let userId in message.data.idToEmail) {
@@ -166,7 +169,8 @@ function complete(socket, message, fileId, scanDate) {
           else
              mail_value = email;
           console.log("parsed status email ", mail_value)
-          finalText += `${scanDate} - ${mail_value} - ${parsed[mail_value].Status}`;
+          if(parsed[mail_value].Status)
+            finalText += `${scanDate} - ${mail_value} - ${parsed[mail_value].Status}`;
           if (parsed[mail_value]["Sub Status"]) {
             finalText += ` (${parsed[mail_value]["Sub Status"]})`;
           }

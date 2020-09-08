@@ -1,3 +1,5 @@
 
 kurt@jones.net.au,Kurt,Jones
-john@wopr.com,John,McKittrick
+kurtj@jones.net.au,Kurt,
+jun@jones.net.au,Kurt Fireball,Jones
+kurt@certa.com.au,Kurt,Jones
