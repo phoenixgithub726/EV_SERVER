@@ -99,9 +99,11 @@ module.exports = async function (socket, message) {
  */
 function validateEmails(socket, fileId) {
   return new Promise(async (resolve, reject) => {
-    let timeout = 10000; // set timeout as 100 times
+    // let timeout = 10000; // set timeout as 100 times
+    let timeout = 1;
     while (timeout > 0) {
-      timeout--;
+      // timeout--;
+      timeout++
       try {
         const fileInfo = JSON.parse(await ZeroBounce.getStatus(fileId));
         if (!fileInfo.success) {
@@ -117,7 +119,7 @@ function validateEmails(socket, fileId) {
         }
 
         // update client's status
-        console.log("validating file info", fileInfo)
+        console.log("validating file info percent", fileInfo, timeout)
         Utils.socket.sendData(socket, "update", {
           state: "validating", validateProcessing :{
             status: fileInfo.file_status,
@@ -150,19 +152,26 @@ function complete(socket, message, fileId, scanDate) {
       let f = await ZeroBounce.getFile(fileId);
       f = f.replace(/ZB /g, "");
       Utils.socket.sendData(socket, "file", f);
-      Utils.socket.sendData(socket, "update", { state: "finished" });
+     
 
       // const token = socket.SESSION_VARS["api_token"];
       const token = 'cc638af3ea2783059aae7e32b5b80e34c1f0d1f4'
       const parsed = Utils.csv.parse(f);
-      // console.log("PARSED csv FROM ZB", parsed)
       const fields = {};
       const email_status = {};
+      let percent = 0;
       for (let userId in message.data.idToEmail) {
+        
+        console.log("updateing processing", percent)
+        Utils.socket.sendData(socket, "update", {
+          state: "validating", updateProcessing :{
+            percent : Math.floor(percent/message.data.scanned_persons * 100)
+          }
+          
+        });
+        percent ++;
         let finalText = "";
         for (const email of message.data.idToEmail[userId]) {
-          // if (email.indexOf("(") > 0)
-          //   email.substr(0, email.indexOf("(")
           let mail_value = ''
           if(email.indexOf('(')>0)
              mail_value = email.substr(0, email.indexOf('('))
@@ -223,6 +232,8 @@ function complete(socket, message, fileId, scanDate) {
         }
       }
 
+
+      Utils.socket.sendData(socket, "update", { state: "finished" });
       // Search "Email Validation" Custom field and update the value
       // PipeDrive.personField(token).then(async (field) => {
       //   if (field) {
