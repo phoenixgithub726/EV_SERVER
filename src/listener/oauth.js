@@ -75,7 +75,7 @@ function oauth(socket, params, callBack) {
       code: params.data,
       // redirect_uri: "https://mail.google.com/",
       // redirect_uri: "https://localhost:3000",
-      redirect_uri: "https://server.certalink.com",
+      redirect_uri: " https://server.certalink.com",
     },
     pipedriveAuthHeader
   )

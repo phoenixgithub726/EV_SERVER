@@ -162,14 +162,15 @@ function complete(socket, message, fileId, scanDate) {
       let percent = 0;
       for (let userId in message.data.idToEmail) {
         
-        console.log("updateing processing", percent)
-        Utils.socket.sendData(socket, "update", {
-          state: "validating", updateProcessing :{
-            percent : Math.floor(percent/message.data.scanned_persons * 100)
-          }
-          
-        });
-        percent ++;
+        // console.log("updateing processing", percent)
+        // Utils.socket.sendData(socket, "update", {
+        //   state: "validating", 
+        //   validateProcessing :{
+        //     status: "update_pipedrive",
+        //     percent : Math.floor(percent/message.data.scanned_persons * 100)
+        //   }
+        // });
+        // percent ++;
         let finalText = "";
         for (const email of message.data.idToEmail[userId]) {
           let mail_value = ''
@@ -195,40 +196,53 @@ function complete(socket, message, fileId, scanDate) {
 
       // Add Email Status to Email address
       let ids = Object.keys(message.data.idToEmail);
-      if (ids.length < 10) await rateLimitedChanger(ids.length);
-      else await rateLimitedChanger(10);
+      // if (ids.length < 10) await rateLimitedChanger(ids.length);
+      // else await rateLimitedChanger(10);
+      await rateLimitedChanger(ids.length);
 
       async function rateLimitedChanger(limit) {
         
         let i = limit;
         let requested = limit;
         while (i--) {
+              Utils.socket.sendData(socket, "update", {
+          state: "validating", 
+          validateProcessing :{
+            status: "update_pipedrive",
+            percent : Math.floor((limit - i)/limit * 100)
+          }
+        });
           let personId = ids.pop();
           //   Get person by ID
           let person_by_id = {};
 
           // add invalid to email address.
-          try {
-            await PipeDrive.getPersonById(personId, token).then((r) => {
-              console.log("getpersonbyid-------r", r);
-              person_by_id = r;
-            });
-            let old_email = person_by_id["email"][0];
-            console.log("old_email", old_email);
-            personId &&
-              PipeDrive.updateEmail(
-                personId,
-                token,
-                old_email,
-                email_status[personId]
-              ).then((r) => {
-                if (!--requested && ids.length > 0) {
-                  rateLimitedChanger(limit);
-                }
+          if(personId && personId != undefined)
+          {
+            try {
+              console.log("personId ",personId);
+              await PipeDrive.getPersonById(personId, token).then((r) => {
+                
+                person_by_id = r;
               });
-          } catch (error) {
-            console.log("error", error);
+              let old_email = person_by_id["email"][0];
+              console.log("old_email",personId, old_email);
+              personId &&
+                PipeDrive.updateEmail(
+                  personId,
+                  token,
+                  old_email,
+                  email_status[personId]
+                ).then((r) => {
+                  if (!--requested && ids.length > 0) {
+                    rateLimitedChanger(limit);
+                  }
+                });
+            } catch (error) {
+              console.log("personId error",personId, error);
+            }
           }
+
         }
       }
 
