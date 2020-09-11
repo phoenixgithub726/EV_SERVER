@@ -8,7 +8,7 @@ const CONSTANT = {
 };
 exports.CONSTANT = CONSTANT;
 exports.CONFIG = {
-    VERSION: '0.0.1',
+    VERSION: '0.1.0',
     HOST: '127.0.0.1',
     PORT: 8888,
     PRINT: CONSTANT.PRINT_ALL,
